@@ -2,21 +2,39 @@ package com.math_game.quiz;
 
 import java.util.Random;
 import java.util.Scanner;
+
+import com.mysql.jdbc.Driver;
+
 import java.util.Arrays;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.lang.Math;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Game 
 {
+	
 		
-		public static void main(String[] args) throws InterruptedException {
+		public static void main(String[] args) throws InterruptedException, FileNotFoundException {
 			
 			Scanner sc  =new Scanner(System.in);
+			
 			System.out.println("Enter your name");
 			String name=sc.next();
+			System.out.println("enter your email id");
+			String emailid=sc.next();
+			
 			System.out.println("Challange yourself by mentioning time in seconds");
 			int sec=(sc.nextInt()*1000);
 			Score sr=new Score();
-			sr.Score(name);		
+			sr.Score(emailid);	
+			
 			
 		
 		Runnable r1=()->
@@ -81,10 +99,10 @@ class Divisors
 class Score extends Thread
 {
 	private static int scr;
-	String name;
-	public void Score(String name)
+	String emailid;
+	public void Score(String emailid)
 	{
-		this.name=name;
+		this.emailid=emailid;
 	}
 	public void score(int n)
 	{
@@ -92,9 +110,53 @@ class Score extends Thread
 	}
 	 public void run()
 	{
+		 Driver driverref=null;
+		 Connection CONN=null;
+		 Statement stmt=null;
+		 ResultSet rs=null;
 		System.out.println("---------------------------------------------------------------");
-			System.out.println("          "+"Name :"+name);
-			System.out.println("          "+"your Total Score :"+scr);
+		try {
+			 driverref=new Driver();
+			 DriverManager.deregisterDriver(driverref);
+	
+			 String dburl="jdbc:mysql://localhost:3306/game_math?user=root&password=root";
+			 CONN=DriverManager.getConnection(dburl);
+			 
+			 String query=" select score from person_details where emailid="+"\'"+emailid+"\'"+"  "; 
+			 stmt=CONN.createStatement();
+			 rs=stmt.executeQuery(query);
+			 while(rs.next())
+			 {
+				 scr=scr+rs.getInt("score");
+			 }
+			 
+			 query=" update person_details set score="+scr+" where emailid="+"\'"+emailid+"\'"+"  ";
+			 stmt=CONN.createStatement();
+			 
+			 int res=stmt.executeUpdate(query);
+			 
+			  query=" select * from person_details where emailid="+"\'"+emailid+"\'"+"  "; 
+			  stmt=CONN.createStatement();
+			  
+			   rs=stmt.executeQuery(query);
+			   while(rs.next())
+			   { System.out.println("Name ="+rs.getString("name"));
+				   System.out.println("Email id="+rs.getString("emailid"));
+				   System.out.println("phone no="+rs.getLong("contact"));
+				   System.out.println("score ="+rs.getInt("score"));
+			   }   
+			   System.out.println();
+			  query=" select name,score from person_details where score=(select max(score) from person_details) ";
+			  stmt=CONN.createStatement();
+			  rs=stmt.executeQuery(query);
+			  while(rs.next()) {
+			  System.out.println("name ="+rs.getString("name"));
+			  System.out.println("High score="+rs.getInt("score"));
+			  }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
 class Play
