@@ -157,6 +157,27 @@ class Score extends Thread
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally
+		{
+			try {
+			if(CONN!=null)
+			{
+				CONN.close();
+			}
+			if(stmt!=null)
+			{
+				stmt.close();
+			}
+			if(rs!=null)
+			{
+				rs.close();
+			}
+			}
+			catch(SQLException e2)
+			{
+				e2.printStackTrace();
+			}
+		}
 	}
 }
 class Play
