@@ -9,7 +9,6 @@ import com.mysql.jdbc.Driver;
 import java.lang.Math;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,8 +44,6 @@ import java.sql.Statement;
 			t.start();
 			t2.stop();	
 			sc.close();
-			
-			
 			}
 			}
 
@@ -111,7 +108,6 @@ import java.sql.Statement;
 				System.out.println("          "+"your Total Score :"+scr);
 				System.out.println("          Time Take:"+this.time);
 				
-				
 				Connection CONN=null;
 				Statement STMT=null;
 				ResultSet RES=null;
@@ -128,7 +124,6 @@ import java.sql.Statement;
 					STMT.executeUpdate(query);
 					
 					query=" select * from score_details where score=(select max(score) from score_details) ";
-					
 					
 					RES=STMT.executeQuery(query);
 					
@@ -159,7 +154,7 @@ import java.sql.Statement;
 				}
 		}
 	}
-	class Play
+	class Play extends Answer
 	{
 		Random rd=new Random();
 			public  int plyGame1()
@@ -171,11 +166,8 @@ import java.sql.Statement;
 				return Math.abs(rd.nextInt());
 			}
 	}
-	class Level1 
+	class Level1 extends Answer
 	{
-		Score sr=new Score();
-		Scanner sc=new Scanner(System.in);
-		
 		public  void level1()
 		{
 			System.out.println("---------------------------------------------------------------");
@@ -192,22 +184,31 @@ import java.sql.Statement;
 			if(rand1!=0&&rand2!=0)
 			{
 				break;
+			}	
+		}
+		solution (rand1,rand2,1);
+		}
+		}
+	}
+	
+	class Answer
+	{
+		Score sr=new Score();
+		public void solution(int rand1,int rand2,int score)
+		{
+			Scanner sc=new Scanner(System.in);
+			System.out.println(rand1+"*"+rand2+"=");
+			int ans=sc.nextInt();
+			if(rand1*rand2==ans)
+			{
+				System.out.println("correct");
+				sr.score(score);
+			}
+			else
+			{
+				System.out.println("wrong");
 			}
 		}
-		System.out.println(rand1+"*"+rand2+"=");
-		int ans=sc.nextInt();
-		if(rand1*rand2==ans)
-		{
-			System.out.println("correct");
-			sr.score(1);
-		}
-		else
-		{
-			System.out.println("wrong");
-		}
-		}
-		}
-		
 	}
 	class Level2 extends Play
 	{
@@ -233,51 +234,27 @@ import java.sql.Statement;
 			{
 					int res=dv.divisor(val,3);
 					num=num/res;
-					System.out.println(num+"*"+num2+"=");
-					int userVal=sc.nextInt();
-					if (num*num2==userVal) {
-						System.out.println("correct");
-						sr.score(2);					
-					}
-					else
-					{
-						System.out.println("wrong");
-					}
+					
+					solution (num,num2,2);
 			}
 			else if(val2>=3)
 			{
 				int res=dv.divisor(val2,3);
 					num2=num2/res;
-					System.out.println(num+"*"+num2+"=");
-					int userVal=sc.nextInt();
-					if (num*num2==userVal) {
-						System.out.println("correct");
-						sr.score(2);
-					}
-					else
-					{
-						System.out.println("wrong");
-					}
+					solution (num,num2,2);
 			}
 			else
 			{
-				System.out.println(num+"*"+num2+"=");
-					int userVal=sc.nextInt();
-					if (num*num2==userVal) {
-						System.out.println("correct");
-						sr.score(2);
-					}
-					else
-					{
-						System.out.println("wrong");
-					}
-			}
-
+				solution (num,num2,2);
 		}
 		}
 	}
-	class Level3 extends Play
-	{
+
+	}
+
+
+public class Level3 extends Play{
+	
 		Divisors dv=new Divisors();
 		Score sr=new Score();
 		Scanner sc=new Scanner(System.in);
@@ -300,49 +277,25 @@ import java.sql.Statement;
 			{
 					int res=dv.divisor(val,4);
 					num=num/res;
-					System.out.println(num+"*"+num2+"=");
-					int userVal=sc.nextInt();
-					if (num*num2==userVal) {
-						System.out.println("correct");
-						sr.score(3);					
-					}
-					else
-					{
-						System.out.println("wrong");
-					}
+					solution (num,num2,3);
 			}
 			else if(val2>=4)
 			{
 				int res=dv.divisor(val2,4);
 					num2=num2/res;
-					System.out.println(num+"*"+num2+"=");
-					int userVal=sc.nextInt();
-					if (num*num2==userVal) {
-						System.out.println("correct");
-						sr.score(3);
-					}
-					else
-					{
-						System.out.println("wrong");
-					}
+					solution (num,num2,3);
 			}
 			else
 			{
-				System.out.println(num+"*"+num2+"=");
-					int userVal=sc.nextInt();
-					if (num*num2==userVal) {
-						System.out.println("correct");
-						sr.score(3);
-					}
-					else
-					{
-						System.out.println("wrong");
-					}
+				solution (num,num2,3);
 			}
 
 		}
 		}
 	}
+
+
+	
 
 
 
