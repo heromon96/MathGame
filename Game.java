@@ -21,7 +21,7 @@ import java.sql.Statement;
 				System.out.println("Enter your name");
 				String name=sc.next();
 				System.out.println("Challange yourself by mentioning time in seconds");
-				int sec=(sc.nextInt()*1000);
+				int sec=(10*1000);
 				Score sr=new Score();
 				sr.Score(name,sec);		
 				Level1 l=new Level1();
@@ -44,6 +44,8 @@ import java.sql.Statement;
 			t.start();
 			t2.stop();	
 			sc.close();
+			
+			
 			}
 			}
 
@@ -91,6 +93,7 @@ import java.sql.Statement;
 		private static int scr;
 		String name;
 		int time;
+		int highscore;
 		public void Score(String name,int time)
 		{
 			this.name=name;
@@ -108,6 +111,7 @@ import java.sql.Statement;
 				System.out.println("          "+"your Total Score :"+scr);
 				System.out.println("          Time Take:"+this.time);
 				
+				
 				Connection CONN=null;
 				Statement STMT=null;
 				ResultSet RES=null;
@@ -118,21 +122,36 @@ import java.sql.Statement;
 					String dburl="jdbc:mysql://localhost:3306/score?user=root&password=root";
 					CONN=DriverManager.getConnection(dburl);
 					
-					String query=" insert into score_details value("+scr+","+this.time+") ";
+					String query=" insert into score_details value("+scr+","+this.time+",\'"+this.name+"\') ";
 					STMT=CONN.createStatement();
 					
 					STMT.executeUpdate(query);
 					
 					query=" select * from score_details where score=(select max(score) from score_details) ";
 					
+					
 					RES=STMT.executeQuery(query);
 					
 					while(RES.next())
 					{
-						System.out.println("score :"+RES.getInt("score"));
-						System.out.println("time :"+RES.getInt("time"));
+						System.out.println();
+						highscore=RES.getInt("score");
+						System.out.println("Name :"+RES.getString("name"));
+						System.out.println("score :"+highscore);
+						System.out.println("duration :"+RES.getInt("time"));
 					}
-					
+					System.out.println();
+					if(highscore>scr)
+					{
+						System.out.println("you lost the game");
+					}
+					else if(highscore<scr)
+					{
+						System.out.println("you are the winner");
+					}
+					else {
+						System.out.println("Draw");
+					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -168,6 +187,9 @@ import java.sql.Statement;
 	}
 	class Level1 extends Answer
 	{
+		
+		
+		
 		public  void level1()
 		{
 			System.out.println("---------------------------------------------------------------");
@@ -184,11 +206,14 @@ import java.sql.Statement;
 			if(rand1!=0&&rand2!=0)
 			{
 				break;
-			}	
+			}
+			
 		}
+		
 		solution (rand1,rand2,1);
 		}
 		}
+		
 	}
 	
 	class Answer
@@ -246,55 +271,12 @@ import java.sql.Statement;
 			else
 			{
 				solution (num,num2,2);
-		}
-		}
-	}
-
-	}
-
-
-public class Level3 extends Play{
-	
-		Divisors dv=new Divisors();
-		Score sr=new Score();
-		Scanner sc=new Scanner(System.in);
-		public  void level3()
-		{
-			System.out.println("---------------------------------------------------------------");
-			System.out.println("Level 3");
-			for (int i=0;i<=3; i++) {
-				int num=plyGame1();
-				int num2=plyGame2();
-			String str=Integer.toString(num);
-			String str2=Integer.toString(num2);
-			int val=str.length();
-			int val2=str2.length();
-			
-			if (val>=4&&val2>=4) {
-					dv.divisor(val,val2,num,num2,4);
-			}
-			else if(val>=4)
-			{
-					int res=dv.divisor(val,4);
-					num=num/res;
-					solution (num,num2,3);
-			}
-			else if(val2>=4)
-			{
-				int res=dv.divisor(val2,4);
-					num2=num2/res;
-					solution (num,num2,3);
-			}
-			else
-			{
-				solution (num,num2,3);
-			}
 
 		}
 		}
 	}
 
-
+	}
 	
 
 
